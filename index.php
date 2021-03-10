@@ -28,6 +28,7 @@ function get_posts_via_rest() {
 	$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
 	// Initialize variable.
 	$allposts = '<div class="cs-blog-post-loader hide"></div><div class="cs-blog-post-container">';
+	$allposts .= '<div class="cs-post-search-bar"><input type="text" placeholder="Search posts by title or content..."><button onclick="search_posts();"><i class="fas fa-search"></i></button></div>';
 	
 	$api_url_compose = 'https://brndwgn.com/wp-json/wp/v2/insight';
 
@@ -66,7 +67,6 @@ function get_posts_via_rest() {
 		// For each post.
 		foreach ( $posts as $post ) {
 
-			// Use print_r($post); to get the details of the post and all available fields
 			// Format the date.
 			$fordate = date( 'd/m/Y', strtotime( $post->modified ) );
 
@@ -100,8 +100,77 @@ function create_pagination($numPages,$currentPage = 1)
 	$paginator .= '</ul></div>';
 	return $paginator;
 }
+
+function search_blog_posts_api(){
+
+	$api_url_compose = "https://brndwgn.com/wp-json/wp/v2/insight/";
+
+	$keyword = isset($_REQUEST['keyword']) ? $_REQUEST['keyword'] : null;
+
+	if($keyword!=null)
+		$api_url_compose .= '?search='.$keyword;
+	
+
+	$response = wp_remote_get( $api_url_compose );
+		
+	
+	// Exit if error.
+	if ( is_wp_error( $response ) ) {
+		return;
+	}
+
+	// Get the body.
+	$posts = json_decode( wp_remote_retrieve_body( $response ) );
+	
+	// Exit if nothing is returned.
+	if ( empty( $posts ) ) {
+		return;
+		die();
+	}
+
+
+	// If there are posts.
+	if ( ! empty( $posts ) ) {
+		
+
+		$searched_posts = array();
+		
+		// For each post.
+		foreach ( $posts as $post ) {
+
+			// Use print_r($post); to get the details of the post and all available fields
+			// Format the date.
+			$fordate = date( 'd/m/Y', strtotime( $post->modified ) );
+
+			$search_text = 	$post->excerpt->rendered;
+
+			$tags = array("<p>", "</p>");
+			$search_content = str_replace($tags, "", $search_text);
+	
+			array_push($searched_posts,array(
+				'title' => esc_html( $post->title->rendered ),
+				'date'=> $fordate,
+				'image'=> esc_html( $post->acf->banner_image__desktop->sizes->large ),
+				'excerpt'=> $search_content,
+				'link' => esc_url( $post->link )
+			));
+
+		}
+		
+
+		header('Content-Type: application/json');
+		echo json_encode($searched_posts);
+
+		exit();
+	}
+
+
+	
+
+
+}
 // Register as a shortcode to be used on the site.
-add_shortcode( 'sc_get_posts_via_rest', 'get_posts_via_rest' );
+add_shortcode( 'brndwgn_blog_post_api', 'get_posts_via_rest' );
 
 wp_enqueue_script('jquery');
 
@@ -110,8 +179,13 @@ wp_register_style ( 'cs-post-css', plugins_url ( 'css/style.css', __FILE__ ));
 wp_enqueue_script('cs-post-js');
 wp_enqueue_style('cs-post-css');
 
+//register ajax calls
 add_action( 'wp_ajax_get_posts_via_rest', 'get_posts_via_rest' );
 add_action( 'wp_ajax_nopriv_get_posts_via_rest', 'get_posts_via_rest' );
+
+add_action( 'wp_ajax_search_blog_posts_api', 'search_blog_posts_api' );
+add_action( 'wp_ajax_nopriv_search_blog_posts_api', 'search_blog_posts_api' );
+
 
 function my_vars_js(){ 
 ?>

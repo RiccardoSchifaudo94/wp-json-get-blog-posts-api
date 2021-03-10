@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+@import url('https://pro.fontawesome.com/releases/v5.10.0/css/all.css');
+
 .cs-blog-post *{
 	margin: 0;
 	padding: 0;
@@ -11,7 +13,7 @@
     max-width: 600px;
     border-top: 3px solid #3f3f3f;
     border-bottom: 3px solid #e47caa;
-    margin-bottom: 30px;
+    margin:0 auto 30px;
 }
 .cs-blog-post ::selection {
     background: rgba(243,139,185,.6);
@@ -35,7 +37,9 @@
 	font-family: 'Open Sans', sans-serif;
 	margin: 20px;
 }
-.cs-blog-post button{
+.cs-blog-post button,
+.cs-post-search-bar button
+{
 	background-color: #f38bb9!important;
     border: 3px solid #e47caa;
     color: #fff!important;
@@ -83,7 +87,7 @@
     justify-content:center;
     font-family: "Inter var", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, sans-serif;
 }
-.active{
+.paginator_container .active{
    background-color: #f38bb9!important;  
    border: 3px solid #e47caa;
    color: #fff!important;
@@ -113,4 +117,75 @@
 @keyframes spin {
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
+}
+.hide-overflow{
+    overflow: hidden;
+}
+.cs-post-search-bar{
+    display: flex;
+    flex-direction:row;
+}
+.cs-post-search-bar input{
+    border-bottom: 2px solid #3f3f3f!important;
+    background-color: #ececec!important;
+    color: #3f3f3f!important;
+}
+.cs-post-search-bar input:focus{
+    border:3px solid #292929!important;
+    background-color: #3f3f3f!important;
+    color: #f38bb9!important;
+}
+.cs-post-search-bar input,
+.cs-post-search-bar input:focus,
+.cs-post-search-bar button{
+     outline: none;
+     height: 60px;
+}
+.cs-post-search-modal-post {
+    position: fixed;
+    z-index: 9999999999;
+    background: rgba(0,0,0,.8);
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    overflow-y:scroll;
+}
+.cs-post-search-modal-post h2{
+    color:#e47caa;
+}
+.cs-post-search-modal-post h2 div{
+    color: #fff;
+    font-size: 24px;
+}
+.cs-post-search-modal-post i{
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    font-size: 45px;
+    background-color: #e47caa;
+    color: #ffffff;
+    padding: 9px 1px 0px 0;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+/* width */
+.cs-post-search-modal-post::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.cs-post-search-modal-post::-webkit-scrollbar-track {
+  background: #3f3f3f;
+}
+
+/* Handle */
+.cs-post-search-modal-post::-webkit-scrollbar-thumb {
+  background: #e47caa;
+}
+
+/* Handle on hover */
+.cs-post-search-modal-post::-webkit-scrollbar-thumb:hover {
+  background: #f38bb9;
 }
