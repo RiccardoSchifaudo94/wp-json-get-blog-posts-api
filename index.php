@@ -108,7 +108,7 @@ function search_blog_posts_api(){
 	$keyword = isset($_REQUEST['keyword']) ? $_REQUEST['keyword'] : null;
 
 	if($keyword!=null)
-		$api_url_compose .= '?search='.$keyword;
+		$api_url_compose .= '?search='.$keyword.'&post_per_page=100';
 	
 
 	$response = wp_remote_get( $api_url_compose );
